@@ -8,10 +8,21 @@ public class MyParty : AutomaticParty
 	public int MaxHeroes { get; }
 	*/
 	
+	/*
+	public override void OnGameStarted()
+	{
+		CreateHero("Serduk", "Hero");
+	}
+	*/
+	
     public override void OnAllHeroesDied()
     {
         CreateHero("Serduk", "Hero");
     }
+	
+	
+	//public void BuyFromGoldShop(string itemName, int amount = 1)
+	
 	
 	/*
 	void Upgrade()

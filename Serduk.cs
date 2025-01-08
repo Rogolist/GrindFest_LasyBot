@@ -3,7 +3,10 @@ using GrindFest;
 
 public partial class Serduk : AutomaticHero
 {
-	public bool panic;
+	private bool panic;
+	private bool debugMode = false;
+	private float waitTime = 30f;
+	private float timer = 0.0f;
 	//public string location;
 	
 	public void Start()

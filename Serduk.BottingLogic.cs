@@ -9,6 +9,8 @@ public partial class Serduk
 {
 	public void BottingLogic()
 	{
+		timer += Time.deltaTime;
+		
 		//var _lvl = Character.Level; // this.Character
 		var _lvl = Character.Level.Level;
 		//Say($"My level is {_lvl}");
@@ -29,6 +31,8 @@ public partial class Serduk
 		// идентификация предметов
 		// Say ( "Yn Lor " , item.transform )
 		
+
+		// https://botforgrindfest.com/api/GrindFest.WorldTile.html
 		
 		//bool panic;
 
@@ -46,117 +50,113 @@ public partial class Serduk
 		if (_lvl < 3 && CurrentArea?.Name != "Stony Plains")
 		{
 			
-			Say($"<<textColor [“red”]>text with red font</textColor>>Run to Stony Plains");
+			if (debugMode) Say($"Run to Stony Plains");
             GoToArea("Stony Plains");
 			
 		} else if (_lvl >= 3 && _lvl < 7 && CurrentArea?.Name != "Crimson Meadows")
 		{
-			Say($"<<textColor [“red”]>>text with red font<</textColor>>Run to Crimson Meadows");
+			if (debugMode) Say($"Run to Crimson Meadows");
             GoToArea("Crimson Meadows");
 
-		
-		
-		
-		
-		
-		
-		
-		
-		
-
-		} else if (panic)
+			
+		} else if (panic && HasHealthPotion())
 		{
 			
-			//Debug.Log("panic");
+			if (debugMode) Debug.Log("panic");
 			RunAway();
 
 		// item.gameobject to get the gameobject where this component is, and then item.gameobject.GetComponent<WhatComponentYouWant>()
 		} else if(Equipment.Weapon == null)
 		{
-			//Debug.Log("Equipment.Weapon");
+			if (debugMode) Debug.Log("Equipment.Weapon");
 			EquipWeaponFromInventory();
 		
 		} else if (Equipment.Shield == null && Equipment.Weapon.name != "Blacksmithing Hammer" && Equipment.Weapon.name !="Pickaxe" && Equipment.Weapon.name !="Pan" && Equipment.Weapon.name !="Fishing Rod" && Equipment.Weapon.name !="Ladle" && Equipment.Weapon.name !="Shortbow" && Equipment.Weapon.name !="Orcish Spear")
 		{
-			//Debug.Log("Equipment.Shield");
+			if (debugMode) Debug.Log("Equipment.Shield");
 			EquipShieldFromInventory();
 				
 		// https://botforgrindfest.com/api/GrindFest.EquipmentSlot.html
 		/*		Head = 0	Chest = 1	Legs = 2	LeftFeet = 3	RightFeet = 4	LeftShoulder = 5	RightShoulder = 6	LeftHand = 7	RightHand = 8	LeftGlove = 9	RightGlove = 10	LeftArm = 11	RightArm = 12	Hair = 13	FacialHair = 14	Ring = 15
 		*/
 		
-		} else if(Equipment[EquipmentSlot.Head] == null) // var rightHand = Equipment[EquipmentSlot.RightHand]; - это про слот персонажа
+	// ПОБЛЕМА: персонаж зависает в поиске предметов, которых у него нет
+
+		
+		} else if(Equipment[EquipmentSlot.Head] == null && timer > waitTime) // var rightHand = Equipment[EquipmentSlot.RightHand]; - это про слот персонажа
 		{
-			//Debug.Log("EquipArmorFromInventory");
+			if (debugMode) Debug.Log("EquipArmorFromInventory Head");
 			EquipArmorFromInventory(EquipmentSlot.Head);
+			
+			//timer = timer + waitTime;
 
-		} else if(Equipment[EquipmentSlot.Chest] == null)
+		} else if(Equipment[EquipmentSlot.Chest] == null && timer > waitTime)
 		{
-			//Debug.Log("EquipArmorFromInventory");
+			if (debugMode) Debug.Log("EquipArmorFromInventory Chest");
 			EquipArmorFromInventory(EquipmentSlot.Chest);
-
-		} else if(Equipment[EquipmentSlot.Legs] == null)
+		
+		} else if(Equipment[EquipmentSlot.Legs] == null && timer > waitTime)
 		{
-			//Debug.Log("EquipArmorFromInventory");
+			if (debugMode) Debug.Log("EquipArmorFromInventory Legs");
 			EquipArmorFromInventory(EquipmentSlot.Legs);
 
-		} else if(Equipment[EquipmentSlot.LeftFeet] == null)
+		} else if(Equipment[EquipmentSlot.LeftFeet] == null && timer > waitTime)
 		{
-			//Debug.Log("EquipArmorFromInventory");
+			if (debugMode) Debug.Log("EquipArmorFromInventory LeftFeet");
 			EquipArmorFromInventory(EquipmentSlot.LeftFeet);
 
-		} else if(Equipment[EquipmentSlot.RightFeet] == null)
+		} else if(Equipment[EquipmentSlot.RightFeet] == null && timer > waitTime)
 		{
-			//Debug.Log("EquipArmorFromInventory");
+			if (debugMode) Debug.Log("EquipArmorFromInventory RightFeet");
 			EquipArmorFromInventory(EquipmentSlot.RightFeet);
 
-		} else if(Equipment[EquipmentSlot.LeftShoulder] == null)
+		} else if(Equipment[EquipmentSlot.LeftShoulder] == null && timer > waitTime)
 		{
-			//Debug.Log("EquipArmorFromInventory");
+			if (debugMode) Debug.Log("EquipArmorFromInventory LeftShoulder");
 			EquipArmorFromInventory(EquipmentSlot.LeftShoulder);
 
-		} else if(Equipment[EquipmentSlot.RightShoulder] == null)
+		} else if(Equipment[EquipmentSlot.RightShoulder] == null && timer > waitTime)
 		{
-			//Debug.Log("EquipArmorFromInventory");
+			if (debugMode) Debug.Log("EquipArmorFromInventory RightShoulder");
 			EquipArmorFromInventory(EquipmentSlot.RightShoulder);
 
-		} else if(Equipment[EquipmentSlot.LeftGlove] == null)
+		} else if(Equipment[EquipmentSlot.LeftGlove] == null && timer > waitTime)
 		{
-			//Debug.Log("EquipArmorFromInventory");
+			if (debugMode) Debug.Log("EquipArmorFromInventory LeftGlove");
 			EquipArmorFromInventory(EquipmentSlot.LeftGlove);
 
-		} else if(Equipment[EquipmentSlot.RightGlove] == null)
+		} else if(Equipment[EquipmentSlot.RightGlove] == null && timer > waitTime)
 		{
-			//Debug.Log("EquipArmorFromInventory");
+			if (debugMode) Debug.Log("EquipArmorFromInventory RightGlove");
 			EquipArmorFromInventory(EquipmentSlot.RightGlove);
 
-		} else if(Equipment[EquipmentSlot.LeftArm] == null)
+		} else if(Equipment[EquipmentSlot.LeftArm] == null && timer > waitTime)
 		{
-			//Debug.Log("EquipArmorFromInventory");
+			if (debugMode) Debug.Log("EquipArmorFromInventory LeftArm");
 			EquipArmorFromInventory(EquipmentSlot.LeftArm);
 
-		} else if(Equipment[EquipmentSlot.RightArm] == null)
+		} else if(Equipment[EquipmentSlot.RightArm] == null && timer > waitTime)
 		{
-			//Debug.Log("EquipArmorFromInventory");
+			if (debugMode) Debug.Log("EquipArmorFromInventory RightArm");
 			EquipArmorFromInventory(EquipmentSlot.RightArm);
 
-		} else if(Equipment[EquipmentSlot.Ring] == null)
+		} else if(Equipment[EquipmentSlot.Ring] == null && timer > waitTime)
 		{
-			//Debug.Log("EquipArmorFromInventory");
+			if (debugMode) Debug.Log("EquipArmorFromInventory Ring");
 			EquipArmorFromInventory(EquipmentSlot.Ring);
-
+		
 
 
 
 		} else if (FindNearestItem())
 			//if(FindItemsOnGround("", null, null, 5f))
 		{
-			//Debug.Log("FindItemsOnGround");
+			if (debugMode) Debug.Log("FindItemsOnGround");
 			CheckItemsOnGround();
 
 		} else if (AttackNearestEnemy())
 		{
-			//Debug.Log("AttackNearestEnemy");
+			if (debugMode) Debug.Log("AttackNearestEnemy");
 				
 			//} else if (FindNearestEnemy(5f))
 			//{
@@ -177,9 +177,13 @@ public partial class Serduk
 
 					//Attack
 
-		} else {
+
+
+		
+
+		} else  {
 				
-			//Debug.Log("RunAroundInArea");
+			if (debugMode) Debug.Log("RunAroundInArea");
 			RunAroundInArea();
 
 					//Say("Attack !");
@@ -261,7 +265,7 @@ public partial class Serduk
 			//Say($"I have a {item.name}");
 			//Say($"{weapon.name} dps {(weapon.BaseMaxDamage - weapon.BaseMinDamage) * weapon.BaseAttackSpeed}");
 
-			if (item.Weapon != null)// && item.DefaultAttack is Weapon.MeleeAttack) // Required Strenght  WeaponMastery
+			if (item?.Weapon != null)// && item.DefaultAttack is Weapon.MeleeAttack) // Required Strenght  WeaponMastery
 			//if (weapon.DefaultAttack is MeleeAttack)
 			{
 				float _itemDPS = ((item.Weapon.MaxDamage + item.Weapon.MinDamage) / 2 ) * item.Weapon.BaseAttackSpeed;
@@ -278,7 +282,8 @@ public partial class Serduk
 						Say($"I've equipped {item.name} with {_itemDPS} DPS ({item.Weapon.WeaponType})");
 						Equip(item);
 						
-						Debug.Log (Equipment.Weapon.WeaponType.ToString()); 
+						//Debug.Log (Equipment.Weapon.WeaponType.ToString()); 
+						if (debugMode) Debug.Log (item.Weapon.WeaponType.ToString()); 
 					}
 					
 				} else {
@@ -286,7 +291,8 @@ public partial class Serduk
 					Say($"I've equipped {item.name} with {_itemDPS} DPS ({item.Weapon.WeaponType})");
 					Equip(item);
 					
-					Debug.Log (Equipment.Weapon.WeaponType.ToString()); 
+						//Debug.Log (Equipment.Weapon.WeaponType.ToString()); 
+						if (debugMode) Debug.Log (item.Weapon.WeaponType.ToString());
 				};
 				
 				//return;
@@ -301,7 +307,7 @@ public partial class Serduk
 
 		foreach (var item in Inventory)
 		{
-			if (item.Shield != null)
+			if (item?.Shield != null)
 			{
 				Say($"I've equipped a {item.name} with {item.Shield.BlockChance} block chance");
 				Equip(item);
@@ -321,13 +327,15 @@ public partial class Serduk
 			// var rightHand = Equipment[EquipmentSlot.RightHand]; - это про слот персонажа
 			// public EquipableBehaviour this[EquipmentSlot slot] { get; }
 			//if (item.equipable.Slot.EquipmentSlot[EquipmentSlot.Head] != null)
-			if (item.equipable.Slot == _slot)
+			if (item?.equipable.Slot == _slot)
 			{
 				Say($"I've equipped a {item.name} at slot {_slot}");// with {item.Shield.BlockChance} block chance");
 				Equip(item);
 				//return;
 			}
 		}
+		
+		waitTime = timer + waitTime;
 	}
 	
 	////////////////////////////////////////////////////////////////////
