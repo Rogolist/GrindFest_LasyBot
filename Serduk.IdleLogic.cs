@@ -48,6 +48,9 @@ public partial class Serduk
 		if (Input.GetKeyDown(KeyCode.F3))
 		{
 			
+			//EquipBestWeaponFromInventory();
+			
+			/*
 			var rightHand = Equipment[EquipmentSlot.RightHand];
 			if (rightHand != null)
 			{
@@ -62,7 +65,7 @@ public partial class Serduk
 				//Say($"I've equipped a {weapon.name} with {weapon.Weapon.MaxDamage} damage, {weapon.Weapon.WeaponType}");
 				//rightHand.gameobject.Weapon.MaxDamage
 			}
-			
+			*/
 
 			//var weapon = Equipment.Weapon;
 			//Say($"I've equipped a {weapon.name} with {weapon.Weapon.MaxDamage} damage, {weapon.Weapon.WeaponType}");

@@ -9,7 +9,20 @@ public partial class Serduk
 {
 	public void BottingLogic()
 	{
-		timer += Time.deltaTime;
+		
+		StatCompositor();
+
+
+
+		int _healCount = 0;
+		// for GUI count 
+		foreach (var item in Inventory)
+		{
+			if (item?.name != "Vial of Health") _healCount++;
+		}
+		healCount = _healCount;
+		
+		//timer += Time.deltaTime;
 		
 		//var _lvl = Character.Level; // this.Character
 		var _lvl = Character.Level.Level;
@@ -21,11 +34,42 @@ public partial class Serduk
 		if (Health > MaxHealth * 0.8) panic = false;
 		
 		/*
-		if (CurrentArea?.Name != "Stony Plains")//Crimson Meadows
+		//if (CurrentArea.Root.name != "Stony Plains") {
+		if (CurrentArea?.Root.Name != "Stony Plains")//Crimson Meadows
         {
 			Say("Run to Stony Plains");
             GoToArea("Stony Plains");
 		*/
+		
+		//if (CurrentArea != null) {
+		//	this.current_area = CurrentArea.Root.name;
+		//}
+
+		if (CurrentArea?.Root.name == null) {
+			GoToArea("Stony Plains");
+			return;
+		} else {
+			// force to go to Stony Plains as we are in another area and under level 10
+			if (Level < 6 && CurrentArea.Root.name != "Stony Plains")
+			{    
+				GoToArea("Stony Plains"); // stops at the red sign
+				Debug.Log(CurrentArea.Root.name); // prints "Crimson Meadows"
+				return;
+			}
+			else if (Level >= 6 && Level < 10 && CurrentArea.Root.name != "Crimson Meadows")
+			{    
+				GoToArea("Crimson Meadows"); // stops at the red sign
+				Debug.Log(CurrentArea.Root.name); // prints "Crimson Meadows"
+				return;
+			}
+
+
+
+
+		}
+		
+		
+		
 		
 		
 		// идентификация предметов
@@ -47,6 +91,7 @@ public partial class Serduk
 			{ 24, "Endless Desert" },
 		*/
 		
+		/*
 		if (_lvl < 3 && CurrentArea?.Name != "Stony Plains")
 		{
 			
@@ -57,102 +102,42 @@ public partial class Serduk
 		{
 			if (debugMode) Say($"Run to Crimson Meadows");
             GoToArea("Crimson Meadows");
-
+		*/
 			
-		} else if (panic && HasHealthPotion())
+		//} else 
+		
+	
+		if (panic)
 		{
-			
 			if (debugMode) Debug.Log("panic");
 			RunAway();
-
 		// item.gameobject to get the gameobject where this component is, and then item.gameobject.GetComponent<WhatComponentYouWant>()
 		} else if(Equipment.Weapon == null)
 		{
 			if (debugMode) Debug.Log("Equipment.Weapon");
 			EquipWeaponFromInventory();
-		
-		} else if (Equipment.Shield == null && Equipment.Weapon.name != "Blacksmithing Hammer" && Equipment.Weapon.name !="Pickaxe" && Equipment.Weapon.name !="Pan" && Equipment.Weapon.name !="Fishing Rod" && Equipment.Weapon.name !="Ladle" && Equipment.Weapon.name !="Shortbow" && Equipment.Weapon.name !="Orcish Spear")
-		{
-			if (debugMode) Debug.Log("Equipment.Shield");
-			EquipShieldFromInventory();
-				
-		// https://botforgrindfest.com/api/GrindFest.EquipmentSlot.html
-		/*		Head = 0	Chest = 1	Legs = 2	LeftFeet = 3	RightFeet = 4	LeftShoulder = 5	RightShoulder = 6	LeftHand = 7	RightHand = 8	LeftGlove = 9	RightGlove = 10	LeftArm = 11	RightArm = 12	Hair = 13	FacialHair = 14	Ring = 15
-		*/
-		
-	// ПОБЛЕМА: персонаж зависает в поиске предметов, которых у него нет
-
-		
-		} else if(Equipment[EquipmentSlot.Head] == null && timer > waitTime) // var rightHand = Equipment[EquipmentSlot.RightHand]; - это про слот персонажа
-		{
-			if (debugMode) Debug.Log("EquipArmorFromInventory Head");
-			EquipArmorFromInventory(EquipmentSlot.Head);
-			
-			//timer = timer + waitTime;
-
-		} else if(Equipment[EquipmentSlot.Chest] == null && timer > waitTime)
-		{
-			if (debugMode) Debug.Log("EquipArmorFromInventory Chest");
-			EquipArmorFromInventory(EquipmentSlot.Chest);
-		
-		} else if(Equipment[EquipmentSlot.Legs] == null && timer > waitTime)
-		{
-			if (debugMode) Debug.Log("EquipArmorFromInventory Legs");
-			EquipArmorFromInventory(EquipmentSlot.Legs);
-
-		} else if(Equipment[EquipmentSlot.LeftFeet] == null && timer > waitTime)
-		{
-			if (debugMode) Debug.Log("EquipArmorFromInventory LeftFeet");
-			EquipArmorFromInventory(EquipmentSlot.LeftFeet);
-
-		} else if(Equipment[EquipmentSlot.RightFeet] == null && timer > waitTime)
-		{
-			if (debugMode) Debug.Log("EquipArmorFromInventory RightFeet");
-			EquipArmorFromInventory(EquipmentSlot.RightFeet);
-
-		} else if(Equipment[EquipmentSlot.LeftShoulder] == null && timer > waitTime)
-		{
-			if (debugMode) Debug.Log("EquipArmorFromInventory LeftShoulder");
-			EquipArmorFromInventory(EquipmentSlot.LeftShoulder);
-
-		} else if(Equipment[EquipmentSlot.RightShoulder] == null && timer > waitTime)
-		{
-			if (debugMode) Debug.Log("EquipArmorFromInventory RightShoulder");
-			EquipArmorFromInventory(EquipmentSlot.RightShoulder);
-
-		} else if(Equipment[EquipmentSlot.LeftGlove] == null && timer > waitTime)
-		{
-			if (debugMode) Debug.Log("EquipArmorFromInventory LeftGlove");
-			EquipArmorFromInventory(EquipmentSlot.LeftGlove);
-
-		} else if(Equipment[EquipmentSlot.RightGlove] == null && timer > waitTime)
-		{
-			if (debugMode) Debug.Log("EquipArmorFromInventory RightGlove");
-			EquipArmorFromInventory(EquipmentSlot.RightGlove);
-
-		} else if(Equipment[EquipmentSlot.LeftArm] == null && timer > waitTime)
-		{
-			if (debugMode) Debug.Log("EquipArmorFromInventory LeftArm");
-			EquipArmorFromInventory(EquipmentSlot.LeftArm);
-
-		} else if(Equipment[EquipmentSlot.RightArm] == null && timer > waitTime)
-		{
-			if (debugMode) Debug.Log("EquipArmorFromInventory RightArm");
-			EquipArmorFromInventory(EquipmentSlot.RightArm);
-
-		} else if(Equipment[EquipmentSlot.Ring] == null && timer > waitTime)
-		{
-			if (debugMode) Debug.Log("EquipArmorFromInventory Ring");
-			EquipArmorFromInventory(EquipmentSlot.Ring);
-		
-
-
 
 		} else if (FindNearestItem())
 			//if(FindItemsOnGround("", null, null, 5f))
 		{
 			if (debugMode) Debug.Log("FindItemsOnGround");
 			CheckItemsOnGround();
+
+
+		} else if (FindNearestInteractive("Tomb"))
+			// chest tomb bookcase barrel
+		{
+			if (debugMode) Debug.Log("FindNearestInteractive");
+			
+			var chest = FindNearestInteractive("Tomb");
+			if (chest != null)
+			{
+				if (InteractWith(chest))
+				{
+					Say("Found and opened a chest!");
+				}
+			} else return;
+			
 
 		} else if (AttackNearestEnemy())
 		{
@@ -193,8 +178,35 @@ public partial class Serduk
 		
 
 	}
-	
 
+
+
+	
+	////////////////////////////////////////////////////////////////////
+
+	void StatCompositor()
+	{
+		// stats
+		if (StatPoints > 0)
+		{
+			if (Intelligence < Strength -10)
+			{
+				BuyStat(Stat.Intelligence, 1);
+				return;
+			}
+			else if (Dexterity < Strength)
+			{
+				BuyStat(Stat.Dexterity, 1);
+				return;
+			}
+			else
+			{
+				BuyStat(Stat.Strength, 1);
+				return;
+			}
+
+		}
+	}
 	
 	////////////////////////////////////////////////////////////////////
 
@@ -239,7 +251,7 @@ public partial class Serduk
 	
 	////////////////////////////////////////////////////////////////////
 	
-	public void RunAway()
+	void RunAway()
 	{
 		if (HasHealthPotion())
 		{
@@ -252,249 +264,6 @@ public partial class Serduk
 				RunAwayFromNearestEnemy(20f);
 	}
 
-	////////////////////////////////////////////////////////////////////
-	
-	public void EquipWeaponFromInventory()
-	{
-					
-		//float _maxDPS = -1000f;
-		//var _bestWeapon = new ItemBehaviour();
-		// найти в инвентаре и надеть оружие
-		foreach (var item in Inventory)
-		{
-			//Say($"I have a {item.name}");
-			//Say($"{weapon.name} dps {(weapon.BaseMaxDamage - weapon.BaseMinDamage) * weapon.BaseAttackSpeed}");
-
-			if (item?.Weapon != null)// && item.DefaultAttack is Weapon.MeleeAttack) // Required Strenght  WeaponMastery
-			//if (weapon.DefaultAttack is MeleeAttack)
-			{
-				float _itemDPS = ((item.Weapon.MaxDamage + item.Weapon.MinDamage) / 2 ) * item.Weapon.BaseAttackSpeed;
-				
-				if (Equipment.Weapon != null)
-				{
-					//float _itemDPS = ((item.Weapon.MaxDamage + item.Weapon.MinDamage) / 2 ) * item.Weapon.BaseAttackSpeed;
-					// float DamageRating => ((float)MinDamage + (float)MaxDamage) / 2 * BaseAttackSpeed;
-					float _currentItemDPS = ((Equipment.Weapon.MaxDamage + Equipment.Weapon.MinDamage) / 2 ) * Equipment.Weapon.BaseAttackSpeed;
-					
-					if (_itemDPS > _currentItemDPS)
-					{
-						//Say($"I've equipped {item.name} with {_itemDPS} DPS !");
-						Say($"I've equipped {item.name} with {_itemDPS} DPS ({item.Weapon.WeaponType})");
-						Equip(item);
-						
-						//Debug.Log (Equipment.Weapon.WeaponType.ToString()); 
-						if (debugMode) Debug.Log (item.Weapon.WeaponType.ToString()); 
-					}
-					
-				} else {
-					//Say($"I've equipped {item.name} !");
-					Say($"I've equipped {item.name} with {_itemDPS} DPS ({item.Weapon.WeaponType})");
-					Equip(item);
-					
-						//Debug.Log (Equipment.Weapon.WeaponType.ToString()); 
-						if (debugMode) Debug.Log (item.Weapon.WeaponType.ToString());
-				};
-				
-				//return;
-			}
-		}
-	}
-	
-	////////////////////////////////////////////////////////////////////
-	
-	public void EquipShieldFromInventory()
-	{
-
-		foreach (var item in Inventory)
-		{
-			if (item?.Shield != null)
-			{
-				Say($"I've equipped a {item.name} with {item.Shield.BlockChance} block chance");
-				Equip(item);
-				//return;
-			}
-
-		}
-
-	}
-	
-	////////////////////////////////////////////////////////////////////
-	
-	public void EquipArmorFromInventory(EquipmentSlot _slot)
-	{
-		foreach (var item in Inventory)
-		{
-			// var rightHand = Equipment[EquipmentSlot.RightHand]; - это про слот персонажа
-			// public EquipableBehaviour this[EquipmentSlot slot] { get; }
-			//if (item.equipable.Slot.EquipmentSlot[EquipmentSlot.Head] != null)
-			if (item?.equipable.Slot == _slot)
-			{
-				Say($"I've equipped a {item.name} at slot {_slot}");// with {item.Shield.BlockChance} block chance");
-				Equip(item);
-				//return;
-			}
-		}
-		
-		waitTime = timer + waitTime;
-	}
-	
-	////////////////////////////////////////////////////////////////////
-	
-	public void CheckItemsOnGround()
-	{
-		foreach (var item in FindItemsOnGround()) // We loop over each item we find on the ground
-		{
-			//Say(item?.name);
-
-			
-			if (item.Weapon != null) // Check if it's actually a weapon
-			{
-				float _itemDPS = ((item.Weapon.MaxDamage + item.Weapon.MinDamage) / 2 ) * item.Weapon.BaseAttackSpeed;
-				
-				if (Equipment.Weapon != null)
-				{
-					float _currentItemDPS = ((Equipment.Weapon.MaxDamage + Equipment.Weapon.MinDamage) / 2 ) * Equipment.Weapon.BaseAttackSpeed;
-					
-					if (_itemDPS > _currentItemDPS)
-					{
-						//Say($"I've equipped {item.name} with {_itemDPS} DPS !");
-						Say($"I've equipped {item.name} with {_itemDPS} DPS ({item.Weapon.WeaponType})");
-						Equip(item);
-					} else {
-						
-					/*
-					if (item.Weapon.MaxDamage > Equipment.Weapon.MaxDamage) // Check if it's better than the current weapon
-					//item.Weapon.MinDamage
-					//item.Weapon.AttackSpeed
-					//WeaponType
-					{
-						Equip(item);
-						//Say($"I've equipped a {item.name} with {item.Weapon.MaxDamage} damage");
-						Say($"I've equipped a {item.name} with {item.Weapon.MaxDamage} damage, {item.Weapon.WeaponType}");
-					} else {
-					*/
-						
-						PickUp(item);
-						//Say($"I've equipped a {item.name} with {item.Weapon.MaxDamage} damage, {item.Weapon.WeaponType}");
-					}
-					
-				} else {
-					Equip(item);
-					Say($"I've equipped a {item.name}");
-					}
-			}
-			
-			else if (item?.Shield != null)
-			{
-
-				if (Equipment.Weapon.name != "Blacksmithing Hammer" && Equipment.Weapon.name !="Pickaxe" && Equipment.Weapon.name !="Pan" && Equipment.Weapon.name !="Fishing Rod" && Equipment.Weapon.name !="Ladle" && Equipment.Weapon.name !="Shortbow" && Equipment.Weapon.name !="Orcish Spear")
-				{
-				//enum _wType = 1;
-				//if (Equipment.WeaponType != WeaponType.TwoHandedSword)
-					//Invalid = -1 Sword = 0 TwoHandedSword = 1 Axe = 2 Mace = 3 Spear = 4 Bow = 5 Crossbow = 6 Gun = 7 Rifle = 8
-				//{
-					
-				// Debug.Log(Equipment.Weapon.WeaponType.ToString());
-				
-					if (Equipment.Shield != null)
-					{
-						if (item.Shield.BlockChance > Equipment.Shield.BlockChance)
-						{
-							Equip(item);
-							Say($"I've equipped a {item.name} with {item.Shield.BlockChance} block chance");
-						} else PickUp(item);
-						
-					} else Equip(item);
-				
-				
-				} else {
-					PickUp(item);
-				}
-				
-			/*	
-			}
-			else if (item?.Armor != null)
-			{
-				if (Equipment.Slots[item.equipable.Slot]?.Item.Armor?.Armor < item.Armor?.Armor)
-				{
-					Equip(item);
-					
-				} else {
-					PickUp(item);
-				}
-			*/	
-			
-			
-			/*
-			// Equipment.Slots[item.equipable.Slot].Item.Armor
-			else if (item?.Equipment[EquipmentSlot.Head] != null)
-			{
-				// if (Equipment.Slots[item.equipable.Slot]?.Item.Armor?.Armor > item.Armor?.Armor)
-				if (item.Armor?.Armor > Equipment[EquipmentSlot.Head]?.Item.Armor?.Armor)
-				{
-				Equip(item);
-				//Say($"I've equipped a {item.name} with {item.Shield.BlockChance} block chance");
-				} else PickUp(item);
-			}
-			*/
-			
-			}
-			else
-			{
-				PickUp(item);
-			}
-			
-			
-			/*
-			var itemOnHead = Equipment[EquipmentSlot.Head];
-			if (itemOnHead != null)
-			{
-				Say($"I'm wearing a {itemOnHead.name} on my head");
-			}
-			*/
-			
-		}
-	}
-	
-	////////////////////////////////////////////////////////////////////
-
-/*
-static bool ShouldEquip(AutomaticHero hero, ItemBehaviour item)
-{
-    try
-    {
-        if (item.Weapon != null)
-            return ShouldEquip(item.Weapon, item.equipable, hero.Equipment.Weapon, hero.Equipment.Shield);
-        else if (item.Shield != null)
-            return ShouldEquip(item.Shield, hero.Equipment.Shield);
-        else if (item.Armor != null)
-            return ShouldEquip(item, hero.Equipment);
-        else if (item.equipable.Slot == EquipmentSlot.Ring)
-            return ShouldEquipRing(item, hero.Equipment);
-    }
-    catch (Exception ex)
-    {
-        Debug.Log($"Failed at {item.Name}: {ex.Message}\n{ex.StackTrace}");
-    }
-
-    return false;
-}
-
-//Is the shield on the ground (itemShield) better than the equipped shield?
-static bool ShouldEquip(ShieldBehaviour itemShield, ShieldBehaviour? heroShield)
-{
-    if (heroShield == null || (heroShield.TryGetComponent(out DurabilityBehaviour heroDur2) && heroDur2.CurrentDurability == 0))
-        return true;
-
-    if (itemShield.BlockAmount * itemShield.BlockChance == heroShield.BlockAmount * heroShield.BlockChance)
-    {
-        if (itemShield.TryGetComponent(out DurabilityBehaviour itemDur) && heroShield.TryGetComponent(out DurabilityBehaviour heroDur))
-            return itemDur.CurrentDurability > heroDur.CurrentDurability;
-    }
-
-    return itemShield.BlockAmount * itemShield.BlockChance > heroShield.BlockAmount * heroShield.BlockChance;
-}
-*/
 
 	
 }
